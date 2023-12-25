@@ -1,0 +1,36 @@
+version: '3.11'
+
+services:
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data/
+    ports:
+      - "5413:5432"
+    environment:
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - djangonetwork
+
+  core:
+    image: sulusau:1.0
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8013:8000"
+    volumes:
+      - .:/app
+    networks:
+      - djangonetwork
+    links:
+      - db:db
+    depends_on:
+      - db
+
+networks:
+    djangonetwork:
+      driver: bridge
