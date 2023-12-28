@@ -1,6 +1,6 @@
 from django.utils import timezone
 from rest_framework import serializers
-
+from django.utils.translation import gettext_lazy as _
 from ..models import BookingEvent
 
 
@@ -10,7 +10,7 @@ class BookingEventSerializer(serializers.ModelSerializer):
         model = BookingEvent
         fields = (
             'event', 'start_date', 'end_date',
-            'customer_name', 'customer_contact', 'created_at'
+            'user', 'created_at'
         )
 
     def validate(self, data):
@@ -20,15 +20,47 @@ class BookingEventSerializer(serializers.ModelSerializer):
         """
         start_date = data.get('start_date')
         end_date = data.get('end_date')
+        request = self.context.get('request')
+        lang = request.headers.get('Accept-Language') if request else None
 
         if start_date and start_date < timezone.now().date():
-            raise serializers.ValidationError(
-                {'start_date': 'Дата начала бронирования не может быть '
-                               'раньше текущей даты.'})
+            if lang == "" or lang is None:
+                error_msg = _(
+                    'Дата начала бронирования не может быть раньше текущей '
+                    'даты.'
+                )
+                raise serializers.ValidationError({'start_date': error_msg})
+            elif lang == "kz":
+                error_msg = _(
+                    'KAZAK Дата начала бронирования не может быть раньше '
+                    'текущей даты.'
+                )
+                raise serializers.ValidationError({'start_date': error_msg})
+            elif lang == "en":
+                error_msg = _(
+                    'ENGLISH Дата начала бронирования не может быть раньше '
+                    'текущей даты.'
+                )
+                raise serializers.ValidationError({'start_date': error_msg})
 
         if start_date and end_date and end_date <= start_date:
-            raise serializers.ValidationError(
-                {'end_date': 'Дата окончания бронирования должна быть после '
-                             'даты начала бронирования.'})
+            if lang == "" or lang is None:
+                error_msg = _(
+                    'RUS Дата окончания бронирования должна быть после даты '
+                    'начала бронирования.'
+                )
+                raise serializers.ValidationError({'end_date': error_msg})
+            elif lang == "kz":
+                error_msg = _(
+                    'KAZAK Дата окончания бронирования должна быть после даты '
+                    'начала бронирования.'
+                )
+                raise serializers.ValidationError({'start_date': error_msg})
+            elif lang == "en":
+                error_msg = _(
+                    'ENGLISH Дата окончания бронирования должна быть после даты '
+                    'начала бронирования.'
+                )
+                raise serializers.ValidationError({'start_date': error_msg})
 
         return data

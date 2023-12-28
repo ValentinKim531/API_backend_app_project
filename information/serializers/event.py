@@ -22,13 +22,13 @@ class EventImageSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    event_image = EventImageSerializer(many=True)
+    event_images = EventImageSerializer(many=True)
 
     class Meta:
         model = Event
         fields = (
             'title', 'subtitle', 'description', 'available',
-            'price', 'event_image'
+            'price', 'event_images'
         )
 
 

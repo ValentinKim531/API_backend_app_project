@@ -14,4 +14,4 @@ EXPOSE 8000
 
 COPY . /app
 
-CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+CMD python manage.py migrate && python manage.py loaddata fixtures/dump.json && python manage.py runserver 0.0.0.0:8000

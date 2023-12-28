@@ -12,25 +12,52 @@ services:
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
     networks:
-      - djangonetwork
+      - sulusainetwork
+
+  redis:
+    image: redis
+    hostname: redis
+    restart: always
+    ports:
+      - "6339:6379"
+    networks:
+      - sulusainetwork
+
 
   core:
-    image: sulusau:1.0
-    restart: always
     build:
       context: .
       dockerfile: Dockerfile
+    image: sulusai:1.0
+    restart: always
     ports:
       - "8013:8000"
     volumes:
-      - .:/app
+      - .:/sulusai
     networks:
-      - djangonetwork
+      - sulusainetwork
     links:
       - db:db
     depends_on:
       - db
 
+  celery-main:
+    image: sulusai:1.0
+    restart: always
+    user: root
+    command: sh -c "celery -A sulusau_core worker -l info -n main"
+    volumes:
+      - ./:/sulusai
+    environment:
+      CELERY_BROKER_URL: 'redis://redis:6379/1'
+    networks:
+      - sulusainetwork
+    links:
+      - db:db
+    depends_on:
+      - redis
+      - db
+
 networks:
-    djangonetwork:
+    sulusainetwork:
       driver: bridge

@@ -23,3 +23,12 @@ class RoomViewSet(GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMix
                 return RoomSerializer
         else:
             return super(RoomViewSet, self).get_serializer_class()
+
+
+
+
+
+
+
+    
+

@@ -8,5 +8,5 @@ from ..models import BookingEvent
 class BookingEventAdmin(SummernoteModelAdmin):
     fields = (
         'event','start_date','end_date',
-        'customer_name','customer_contact'
+        'user'
     )

@@ -10,8 +10,8 @@ class EventImageInline(admin.TabularInline):
     readonly_fields = ('image_preview',)
 
     def image_preview(self, obj):
-        if obj.image:
-            return mark_safe(f'<img src = "{obj.image.url}" width="250px" height="350px"/>')
+        if obj.event_image:
+            return mark_safe(f'<img src = "{obj.event_image.url}" width="250px" height="350px"/>')
         return '-'
 
     image_preview.short_description = 'Предпросмотр изображения'

@@ -27,10 +27,12 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
-    path("admin/", admin.site.urls),
-    path('summernote/', include('django_summernote.urls')),
-
+    path('api/user/', include('accounts.urls')),
     path('api/information/', include('information.urls')),
+
+    path("admin/", admin.site.urls),
+
+    path('summernote/', include('django_summernote.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
