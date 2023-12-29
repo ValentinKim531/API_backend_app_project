@@ -6,15 +6,34 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-def send_email(request):
+def send_email(request, language='ru'):
     logger.warning("===================")
     email = request.data.get("username")
     code = OTP.generate_code()
     obj = OTP.objects.create(user=email, code=code)
-    htmlgen = (f'<p>Ваш код для подтверждения <strong>{code}</strong></p>'
-               f'C уважением, команда Sulu sai')
+
+    # Словари для темы письма
+    subject_messages = {
+        'ru': 'Код для подтверждения адреса электронной почты',
+        'kz': 'Электрондық пошта мекенжайын растау коды',
+        'en': 'Email address verification code'
+    }
+
+    # Словари для тела письма
+    body_messages = {
+        'ru': (f'<p>Ваш код для подтверждения <strong>{code}</strong></p>'
+               f'С уважением, команда Sulu sai'),
+        'kz': (f'<p>Сіздің растау кодыңыз <strong>{code}</strong></p>'
+               f'Құрметпен, Sulu sai командасы'),
+        'en': (f'<p>Your verification code is <strong>{code}</strong></p>'
+               f'Best regards, Sulu sai team')
+    }
+
+    subject = subject_messages.get(language, subject_messages['ru'])
+    htmlgen = body_messages.get(language, body_messages['ru'])
+
     r = send_mail(
-        'Код для подтверждения адреса электронной почты', code,
+        subject, code,
         f'Sulu sai <{settings.EMAIL_HOST_USER}>',
         [email], fail_silently=False, html_message=htmlgen
     )

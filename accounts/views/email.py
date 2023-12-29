@@ -19,7 +19,7 @@ class EmailView(ModelViewSet):
         language = self.request.headers.get("Accept-Language", "ru")
         if (request.data.get('is_registration') and
                 User.objects.filter(username=request.data.get('username')).exists()):
-            if language == "kk":
+            if language == "kz":
                 return Response(
                     data={'error':
                               'Мұндай поштасы бар пайдаланушы қазірдің өзінде бар'},
@@ -32,7 +32,7 @@ class EmailView(ModelViewSet):
                 return Response(
                     data={'error': 'Пользователь с такой почтой уже существует'},
                                 status=status.HTTP_400_BAD_REQUEST)
-        send_email(request)
+        send_email(request, language)
         return Response(status=status.HTTP_200_OK)
 
     @extend_schema(
