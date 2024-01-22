@@ -23,21 +23,26 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     room_images = RoomImageSerializer(many=True)
+    main_image = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
         fields = (
             'title', 'subtitle', 'description', 'available',
-            'price', 'room_images'
+            'price', 'room_images', 'main_image'
         )
 
+    def get_main_image(self, obj):
+        if obj.main_image:  # Проверяем, что основное изображение существует
+            return settings.HOST_URL + obj.get_main_image_url()  # Получаем полный URL для изображения
+        return None  # Или возвращаем None, если изображение отсутствует
 
 class RoomKZSerializer(RoomSerializer):
     class Meta:
         model = Room
         fields = (
             'title', 'subtitle', 'description', 'available',
-            'price', 'room_images'
+            'price', 'room_images', 'main_image'
         )
         extra_kwargs = {
             'title': {'source': 'title_kz'},
@@ -51,7 +56,7 @@ class RoomENSerializer(RoomSerializer):
         model = Room
         fields = (
             'title', 'subtitle', 'description', 'available',
-            'price', 'room_images'
+            'price', 'room_images', 'main_image'
         )
         extra_kwargs = {
             'title': {'source': 'title_en'},

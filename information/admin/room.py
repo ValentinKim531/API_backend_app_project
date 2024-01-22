@@ -24,5 +24,13 @@ class RoomAdmin(SummernoteModelAdmin):
         'title','title_kz','title_en',
         'subtitle','subtitle_kz','subtitle_en',
         'description','description_kz','description_en',
-        'available','price'
+        'available','price', 'main_image', 'image_preview',
     )
+    readonly_fields = ('image_preview',)
+
+    def image_preview(self, obj):
+        if obj.main_image:  # Используем 'main_image' вместо 'room_image'
+            return mark_safe(f'<img src="{obj.main_image.url}" width="250px" height="350px"/>')
+        return '-'
+
+    image_preview.short_description = 'Предпросмотр основного изображения'

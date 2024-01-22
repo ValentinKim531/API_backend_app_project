@@ -14,13 +14,22 @@ class Room(models.Model):
     description = models.TextField(verbose_name='Описание')
     description_kz = models.TextField(verbose_name='Описание KZ', blank=True, null=True)
     description_en = models.TextField(verbose_name='Описание EN', blank=True, null=True)
-
+    main_image = models.ImageField(verbose_name='Основное изображение', upload_to='room/',
+                                   blank=True, null=True)
     available = models.BooleanField(verbose_name='Доступность', default=True)
     price = models.DecimalField(verbose_name='Цена', max_digits=10, decimal_places=2)
 
 
     def __str__(self):
         return self.title
+
+    def get_main_image_url(self):
+        # Если основное изображение задано, возвращаем его URL
+        if self.main_image:
+            return self.main_image.url
+        # Если нет, возвращаем URL первого изображения из room_images
+        # или пустую строку, если изображений нет
+        return self.room_images.first().get_absolute_image_url() if self.room_images.exists() else ''
 
     class Meta:
         verbose_name = _('Номер')
