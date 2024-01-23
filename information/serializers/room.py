@@ -28,7 +28,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = (
-            'title', 'subtitle', 'description', 'available',
+            'id', 'title', 'subtitle', 'description', 'available',
             'price', 'room_images', 'main_image'
         )
 
@@ -41,7 +41,7 @@ class RoomKZSerializer(RoomSerializer):
     class Meta:
         model = Room
         fields = (
-            'title', 'subtitle', 'description', 'available',
+            'id', 'title', 'subtitle', 'description', 'available',
             'price', 'room_images', 'main_image'
         )
         extra_kwargs = {
@@ -55,7 +55,7 @@ class RoomENSerializer(RoomSerializer):
     class Meta:
         model = Room
         fields = (
-            'title', 'subtitle', 'description', 'available',
+            'id', 'title', 'subtitle', 'description', 'available',
             'price', 'room_images', 'main_image'
         )
         extra_kwargs = {
